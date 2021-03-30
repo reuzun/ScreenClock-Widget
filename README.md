@@ -1,5 +1,5 @@
 # Screen Clock - JavaFX
-It is a basic widget that stays always top of screen and shows the time. Even if you change window it still stays there. There is two color options with black and navajowhite which is close to pure white. 
+It is a basic widget that stays **always top** of screen and shows the time. Even if you change window it still stays there. There is two color options with black and navajowhite which is close to pure white. 
 
 - Example demonstration: ( In different places of screen with different colors.)
  
