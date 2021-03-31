@@ -1,11 +1,16 @@
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.robot.Robot;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
@@ -27,6 +32,8 @@ public class Main extends Application {
     static Stage stage;
     Text text = new Text();
     Scene scene = new Scene(mainPanel);
+    javafx.scene.robot.Robot robot = new Robot();
+    boolean autoColor = true;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -53,11 +60,21 @@ public class Main extends Application {
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
+                        if(autoColor) {
+                            WritableImage imgReturn = robot.getScreenCapture(null, new Rectangle2D(stage.getX(), stage.getY(), 10, 10));
+                            PixelReader px = ((Image) imgReturn).getPixelReader();
+                            Color pixel = px.getColor(4, 4);
+                            if ((pixel.getRed() * 255) * 0.299 + (pixel.getGreen() * 255) * 0.587 + (pixel.getBlue() * 255 * 0.114) < 186) {
+                                text.setFill(Color.NAVAJOWHITE);
+                            } else {
+                                text.setFill(Color.BLACK);
+                            }
+                        }
                         text.setText(getTime());
                     }
                 });
             }
-        }, 0, 1000);
+        }, 0, 500);
 
 
 
@@ -94,6 +111,7 @@ public class Main extends Application {
         launch(args);
     }
 
+    //Draggable stage and App properties with mouse clicking
     private void makeStageDrageable() {
         mainPanel.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
@@ -122,15 +140,18 @@ public class Main extends Application {
             if(e.getButton() == MouseButton.PRIMARY ){
                 if(e.isControlDown()){
                     text.setFont(Font.font(text.getFont().getSize() + 4));
-                    stage.setHeight(stage.getHeight() + 6);
-                    stage.setWidth(stage.getWidth() + 6);
+                    stage.setHeight(stage.getHeight() + 11);
+                    stage.setWidth(stage.getWidth() + 11);
                 }
             }
             if (e.getButton() == MouseButton.SECONDARY) {
                 if(e.isControlDown()){
                     text.setFont(Font.font(text.getFont().getSize() - 4));
-                    stage.setHeight(stage.getHeight() - 6);
-                    stage.setWidth(stage.getWidth() - 6);
+                    stage.setHeight(stage.getHeight() - 11);
+                    stage.setWidth(stage.getWidth() - 11);
+                }
+                else if(e.isShiftDown()){
+                    autoColor = !autoColor;
                 }
                 else {
                     if (text.getFill() == Color.BLACK)
@@ -141,9 +162,9 @@ public class Main extends Application {
 
             }
             if (e.getButton() == MouseButton.MIDDLE) {
-                text.setFont(Font.font(text.getFont().getSize() + 4));
-                stage.setHeight(stage.getHeight() + 25);
-                stage.setWidth(stage.getWidth() + 25);
+                    text.setFont(Font.font(text.getFont().getSize() + 4));
+                    stage.setHeight(stage.getHeight() + 25);
+                    stage.setWidth(stage.getWidth() + 25);
             }
         });
     }
