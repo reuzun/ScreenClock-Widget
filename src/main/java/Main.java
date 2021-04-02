@@ -12,6 +12,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.robot.Robot;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -41,7 +42,6 @@ public class Main extends Application {
         primaryStage.setOpacity(0);
         primaryStage.setHeight(0);
         primaryStage.setWidth(0);
-        primaryStage.show();
 
         Stage localStage = new Stage();
         localStage.initOwner(primaryStage);
@@ -50,6 +50,8 @@ public class Main extends Application {
         text.setStyle("" +
                 "-fx-cursor: HAND;" +
                 "-fx-underline: false;"
+                /*"-fx-font-weight: BOLD"*/
+                + "-fx-font-family: Arial"
         );
 
 
@@ -60,10 +62,10 @@ public class Main extends Application {
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        if(autoColor) {
-                            WritableImage imgReturn = robot.getScreenCapture(null, new Rectangle2D(stage.getX(), stage.getY(), 10, 10));
+                        if (autoColor) {
+                            WritableImage imgReturn = robot.getScreenCapture(null, new Rectangle2D(stage.getX(), stage.getY(), 30, 20));
                             PixelReader px = ((Image) imgReturn).getPixelReader();
-                            Color pixel = px.getColor(4, 4);
+                            Color pixel = px.getColor(17, 9);
                             if ((pixel.getRed() * 255) * 0.299 + (pixel.getGreen() * 255) * 0.587 + (pixel.getBlue() * 255 * 0.114) < 186) {
                                 text.setFill(Color.NAVAJOWHITE);
                             } else {
@@ -75,7 +77,6 @@ public class Main extends Application {
                 });
             }
         }, 0, 500);
-
 
 
         text.setFont(Font.font(16));
@@ -95,12 +96,12 @@ public class Main extends Application {
 
     }
 
-    private String getTime(){
+    private String getTime() {
         ZonedDateTime dateTime = ZonedDateTime.now();
         StringBuilder sb = new StringBuilder();
 
         String hour = String.valueOf(dateTime.getHour());
-        String minute = dateTime.getMinute() < 10 ? String.valueOf("0"+dateTime.getMinute()) : String.valueOf(dateTime.getMinute());
+        String minute = dateTime.getMinute() < 10 ? String.valueOf("0" + dateTime.getMinute()) : String.valueOf(dateTime.getMinute());
 
         sb.append(hour + ":" + minute);
 
@@ -135,25 +136,24 @@ public class Main extends Application {
             Main.stage.setOpacity(1.0f);
         });
         mainPanel.setOnMouseClicked(e -> {
-            if(e.getButton() == MouseButton.MIDDLE)
+            if (e.getButton() == MouseButton.MIDDLE)
                 System.exit(-1);
-            if(e.getButton() == MouseButton.PRIMARY ){
-                if(e.isControlDown()){
-                    text.setFont(Font.font(text.getFont().getSize() + 4));
-                    stage.setHeight(stage.getHeight() + 11);
+            if (e.getButton() == MouseButton.PRIMARY) {
+                if (e.isControlDown()) {
+                    text.setFont(Font.font(text.getFont().getFamily(), text.getFont().getSize() + 4));
+                    stage.setHeight(stage.getHeight() + 10);
                     stage.setWidth(stage.getWidth() + 11);
                 }
             }
             if (e.getButton() == MouseButton.SECONDARY) {
-                if(e.isControlDown()){
-                    text.setFont(Font.font(text.getFont().getSize() - 4));
-                    stage.setHeight(stage.getHeight() - 11);
+                if (e.isControlDown() && text.getFont().getSize() > 16) {
+                    text.setFont(Font.font(text.getFont().getFamily(), text.getFont().getSize() - 4));
+                    stage.setHeight(stage.getHeight() - 10);
                     stage.setWidth(stage.getWidth() - 11);
-                }
-                else if(e.isShiftDown()){
+                } else if (e.isShiftDown()) {
                     autoColor = !autoColor;
-                }
-                else {
+                } else {
+                    if (text.getFont().getSize() == 16 && e.isControlDown()) return; //needs code review..
                     if (text.getFill() == Color.BLACK)
                         text.setFill(Color.NAVAJOWHITE);
                     else
@@ -162,9 +162,9 @@ public class Main extends Application {
 
             }
             if (e.getButton() == MouseButton.MIDDLE) {
-                    text.setFont(Font.font(text.getFont().getSize() + 4));
-                    stage.setHeight(stage.getHeight() + 25);
-                    stage.setWidth(stage.getWidth() + 25);
+                text.setFont(Font.font(text.getFont().getSize() + 4));
+                stage.setHeight(stage.getHeight() + 25);
+                stage.setWidth(stage.getWidth() + 25);
             }
         });
     }
