@@ -1,3 +1,5 @@
+import com.sun.javafx.PlatformUtil;
+import com.sun.javafx.application.PlatformImpl;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -42,6 +44,8 @@ public class Main extends Application {
         primaryStage.setOpacity(0);
         primaryStage.setHeight(0);
         primaryStage.setWidth(0);
+        if(!PlatformUtil.isLinux())
+            primaryStage.show();
 
         Stage localStage = new Stage();
         localStage.initOwner(primaryStage);
