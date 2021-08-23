@@ -15,3 +15,6 @@ To change the position of clock just bring your cursor to the clock when your cu
 4) With right mouse button and ctrl button you can make smaller the clock text.
 5) With wheel clicking you can exit from the clock.
 6) With shift - right mouse button clicking you can enable/disable auto color feature. Which is a feature that colors the text according the background of screen where the clock text is.
+
+## Licence
+Licensed under [GPL-3.0 License](LICENSE).
